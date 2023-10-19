@@ -115,6 +115,9 @@ class SinglyLinkedList:
             return p
         return None
 
+    def clear(self):
+        while self.head:
+            self.pop_front()
 
 
 class Test(unittest.TestCase):
@@ -202,6 +205,17 @@ class Test(unittest.TestCase):
         self.assertEqual(5, linked_list.pop_front())
         self.assertEqual(6, linked_list.pop_front())
         self.assertEqual(None, linked_list.pop_front())
+
+    def test_clear(self):
+        linked_list = SinglyLinkedList()
+        linked_list.clear()
+        self.assertEqual(True, linked_list.is_empty())
+        linked_list.push_back(1)
+        linked_list.push_back(2)
+        linked_list.push_back(3)
+        self.assertEqual([1, 2, 3], linked_list.as_list())
+        linked_list.clear()
+        self.assertEqual(True, linked_list.is_empty())
 
 
 if __name__ == '__main__':
