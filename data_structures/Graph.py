@@ -31,12 +31,12 @@ class Graph:
                     n_i.append((j, li[j]))
         return n_i
 
-    def bfs(self):
-        if self.number_nodes == 0:
+    def bfs(self, start_node=0):
+        if self.number_nodes == 0 or start_node >= self.number_nodes:
             return []
         visited = [False] * self.number_nodes
         nodes = []
-        visit_queue = [0]
+        visit_queue = [start_node]
         while len(visit_queue) > 0:
             next_node = visit_queue.pop(0)
             if not visited[next_node]:
@@ -48,12 +48,12 @@ class Graph:
                         visit_queue.append(i)
         return nodes
 
-    def dfs(self):
-        if self.number_nodes == 0:
+    def dfs(self, start_node=0):
+        if self.number_nodes == 0 or start_node >= self.number_nodes:
             return []
         visited = [False] * self.number_nodes
         nodes = []
-        visit_stack = [0]
+        visit_stack = [start_node]
         while len(visit_stack) > 0:
             next_node = visit_stack.pop(0)
             if not visited[next_node]:
@@ -135,7 +135,7 @@ class Test(unittest.TestCase):
         assert [(0, 3), (2, 5)] == graph.neighbors_with_weights(1)
         assert [(0, 1), (1, 5)] == graph.neighbors_with_weights(2)
 
-    def test_bfs(self):
+    def test_search(self):
         graph = Graph(7, directed=False)
         graph.add_edge(0, 1)
         graph.add_edge(0, 2)
@@ -154,7 +154,13 @@ class Test(unittest.TestCase):
         assert [4, 5] == graph.neighbors(6)
 
         assert [0, 1, 2, 3, 4, 5, 6] == graph.bfs()
+        assert [0, 1, 2, 3, 4, 5, 6] == graph.bfs(0)
+        assert [1, 0, 3, 4, 2, 5, 6] == graph.bfs(1)
+        assert [6, 4, 5, 1, 2, 3, 0] == graph.bfs(6)
         assert [0, 1, 3, 5, 6, 4, 2] == graph.dfs()
+        assert [0, 1, 3, 5, 6, 4, 2] == graph.dfs(0)
+        assert [1, 0, 2, 4, 6, 5, 3] == graph.dfs(1)
+        assert [6, 4, 1, 0, 2, 3, 5] == graph.dfs(6)
 
 
 
