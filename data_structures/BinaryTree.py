@@ -28,41 +28,31 @@ class BinaryTree:
             parent.right = new_node
         return new_node
 
-    def _bfs(self, node):
-        nodes = []
-        if node:
-            if node.left:
-                nodes.append(node.left.value)
-            if node.right:
-                nodes.append(node.right.value)
-            nodes.extend(self._bfs(node.left))
-            nodes.extend(self._bfs(node.right))
-        return nodes
-
     def bfs(self):
         nodes = []
         if self.root:
-            nodes = [self.root.value]
-            nodes.extend(self._bfs(self.root))
-        return nodes
-
-    def _dfs(self, stack):
-        nodes = []
-        while stack.head:
-            p = stack.head.value
-            stack.pop_front()
-            if p and p.value:
-                nodes.append(p.value)
-                if p.right:
-                    stack.push_front(p.right)
-                if p.left:
-                    stack.push_front(p.left)
-
+            nodes_queue = [self.root]
+            while nodes_queue:
+                current_node = nodes_queue.pop(0)
+                if current_node:
+                    nodes.append(current_node.value)
+                    nodes_queue.append(current_node.left)
+                    nodes_queue.append(current_node.right)
         return nodes
 
     def dfs(self):
-        stack = SLL.SinglyLinkedList([self.root])
-        return self._dfs(stack)
+        nodes = []
+        if self.root:
+            nodes_stack = [self.root]
+            while nodes_stack:
+                current_node = nodes_stack.pop()
+                if current_node:
+                    nodes.append(current_node.value)
+                    if current_node.right:
+                        nodes_stack.append(current_node.right)
+                    if current_node.left:
+                        nodes_stack.append(current_node.left)
+        return nodes
 
 
 class Test(unittest.TestCase):

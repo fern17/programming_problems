@@ -19,7 +19,6 @@ class Tree:
             parent.children.append(new_node)
         return new_node
 
-
     def bfs(self):
         nodes = []
         if not self.root:
