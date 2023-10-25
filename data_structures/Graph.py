@@ -1,3 +1,4 @@
+import collections
 import unittest
 
 
@@ -65,6 +66,33 @@ class Graph:
                     if not visited[i]:
                         new_to_visit.append(i)
                 visit_stack = new_to_visit + visit_stack
+        return nodes
+
+    def topological_sort(self):
+        def find_next(adj):
+            if not adj:
+                return -1
+            best_value = -1
+            best_key = -1
+            for k, v in adj.items():
+                n = len(v)
+                if best_value == -1 or (best_value != -1 and n < best_value):
+                    best_value = n
+                    best_key = k
+            return best_key
+
+        adjacencies = collections.OrderedDict()
+        for i in range(self.number_nodes):
+            adjacencies[i] = self.neighbors(i)
+        nodes = []
+        n = find_next(adjacencies)
+        while n in adjacencies:
+            nodes.append(n)
+            adjacencies.pop(n)
+            for k, v in adjacencies.items():
+                if n in v:
+                    v.remove(n)
+            n = find_next(adjacencies)
         return nodes
 
     def print(self, with_weights=False):
@@ -162,6 +190,19 @@ class Test(unittest.TestCase):
         assert [1, 0, 2, 4, 6, 5, 3] == graph.dfs(1)
         assert [6, 4, 1, 0, 2, 3, 5] == graph.dfs(6)
 
+    def test_topological_sort(self):
+        graph = Graph(9, directed=True)
+        self.assertEqual([0, 1, 2, 3, 4, 5, 6, 7, 8], graph.topological_sort())
+        graph.add_edge(1, 5)
+        graph.add_edge(2, 1)
+        graph.add_edge(2, 5)
+        graph.add_edge(2, 8)
+        graph.add_edge(3, 1)
+        graph.add_edge(4, 7)
+        graph.add_edge(6, 1)
+        graph.add_edge(6, 3)
+        graph.add_edge(6, 2)
+        self.assertEqual([0, 5, 1, 3, 7, 4, 8, 2, 6], graph.topological_sort())
 
 
 if __name__ == '__main__':
