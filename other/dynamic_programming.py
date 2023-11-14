@@ -55,6 +55,41 @@ def get_robot_path(maze):
     return None
 
 
+def product_without_product_helper(smaller, bigger):
+    if smaller == 0:
+        return 0
+    if smaller == 1:
+        return bigger
+
+    half = smaller >> 1
+    half_prod = product_without_product_helper(half, bigger)
+    if smaller % 2 == 0:
+        return half_prod + half_prod
+    else:
+        return half_prod + half_prod + bigger
+
+
+def product_without_product(a, b):
+    smaller, bigger = (a, b) if (a < b) else (b, a)
+    return product_without_product_helper(smaller, bigger)
+
+
+def hanoi_helper(n, tower_origin, tower_destination, tower_buffer):
+    if n <= 0:
+        return
+    hanoi_helper(n - 1, tower_origin, tower_buffer, tower_destination)
+    tower_destination.append(tower_origin.pop())
+    hanoi_helper(n - 1, tower_buffer, tower_destination, tower_origin)
+
+
+def hanoi(n):
+    tower_origin = [i for i in range(1, n + 1)]
+    tower_buffer = []
+    tower_destination = []
+    hanoi_helper(n, tower_origin, tower_destination, tower_buffer)
+    return tower_destination
+
+
 class Test(unittest.TestCase):
     def test_triple_step(self):
         self.assertEqual(1, triple_step(1))
@@ -73,6 +108,16 @@ class Test(unittest.TestCase):
                 [0, 1, 0, 0, 1],
                 [0, 1, 1, 1, 1]]
         self.assertEqual([(0, 0), (1, 0), (1, 1), (2, 1), (3, 1), (4, 1), (4, 2), (4, 3), (4, 4)], get_robot_path(maze))
+
+    def test_product(self):
+        self.assertEqual(56, product_without_product(8, 7))
+        self.assertEqual(64, product_without_product(8, 8))
+        self.assertEqual(2425, product_without_product(25, 97))
+
+    def test_hanoi(self):
+        self.assertEqual([1, 2, 3], hanoi(3))
+        self.assertEqual([1, 2, 3, 4], hanoi(4))
+        self.assertEqual([1, 2, 3, 4, 5], hanoi(5))
 
 
 if __name__ == '__main__':
