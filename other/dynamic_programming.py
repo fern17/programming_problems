@@ -21,6 +21,8 @@ def triple_step_with_memo(n):
 
 
 def triple_step(n):
+    """A child is running up a staircase with N steps. He can jump either 1, 2 or 3 steps. Calculate how many possible ways
+    can the child climb the staircase"""
     if n < 0:
         return 0
     elif n == 0:
@@ -46,6 +48,7 @@ def get_robot_path_helper(maze, row, column, path, failed_points):
 
 
 def get_robot_path(maze):
+    """Write a function to help a robot find its way in a maze. There could be some cells where the robot cannot walk"""
     if not maze or len(maze) == 0:
         return None
     path = []
@@ -70,6 +73,7 @@ def product_without_product_helper(smaller, bigger):
 
 
 def product_without_product(a, b):
+    """Write a function to calculate the product of two numbers without using the product operator"""
     smaller, bigger = (a, b) if (a < b) else (b, a)
     return product_without_product_helper(smaller, bigger)
 
@@ -83,11 +87,30 @@ def hanoi_helper(n, tower_origin, tower_destination, tower_buffer):
 
 
 def hanoi(n):
+    """Solve the classic Towers of Hanoi problem for any value of N"""
     tower_origin = [i for i in range(1, n + 1)]
     tower_buffer = []
     tower_destination = []
     hanoi_helper(n, tower_origin, tower_destination, tower_buffer)
     return tower_destination
+
+
+def all_permutations(s):
+    """Write a method to compute all permutations of a string with unique characters"""
+    if not s:
+        return ['']
+    perms = []
+    if len(s) == 0:
+        perms.append('')
+        return perms
+    head = s[0]
+    tail = s[1:]
+    tail_perms = all_permutations(tail)
+    for word in tail_perms:
+        for j in range(len(word) + 1):
+            sp = word[0:j] + head + word[j:]
+            perms.append(sp)
+    return perms
 
 
 class Test(unittest.TestCase):
@@ -118,6 +141,11 @@ class Test(unittest.TestCase):
         self.assertEqual([1, 2, 3], hanoi(3))
         self.assertEqual([1, 2, 3, 4], hanoi(4))
         self.assertEqual([1, 2, 3, 4, 5], hanoi(5))
+
+    def test_all_permutations(self):
+        self.assertEqual(['a'], all_permutations('a'))
+        self.assertEqual(['ab', 'ba'], all_permutations('ab'))
+        self.assertEqual(['abc', 'bac', 'bca', 'acb', 'cab', 'cba'], all_permutations('abc'))
 
 
 if __name__ == '__main__':
